@@ -8,8 +8,8 @@ from flask_wtf import CSRFProtect
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 
-bootstrap = Bootstrap()
-db = SQLAlchemy()
+bootstrap = Bootstrap()             # bootstrap实例
+db = SQLAlchemy()                   # 数据模型实例
 login_manager = LoginManager()
 csrf = CSRFProtect()
 ckeditor = CKEditor()
@@ -20,6 +20,7 @@ migrate = Migrate()
 
 @login_manager.user_loader
 def load_user(user_id):
+    """加载管理员"""
     from bluelog.models import Admin
     user = Admin.query.get(int(user_id))
     return user
