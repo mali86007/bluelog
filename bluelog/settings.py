@@ -13,7 +13,7 @@ else:
 class  BaseConfig(object):
     """基础设置类"""
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev key')             # 密钥
-    DEBUG_TB_INTERCEPT_REDIRETS = False                         # 调试
+    DEBUG_TB_INTERCEPT_REDIRETS = True                         # 调试，默认False
     SQLALCHEMY_TRACK_MODIFICATIONS = False                      # 数据库
     SQLALCHEMY_RECORD_QUERIES = True                            # 数据库
 
@@ -46,7 +46,8 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     """生产设置类"""
-    SQLALCHEMY_DATABASE_URI = os.path('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))    # 生产数据库路径
+    # SQLALCHEMY_DATABASE_URI = os.path('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))    # 生产数据库路径
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))
 
 
 config = {
