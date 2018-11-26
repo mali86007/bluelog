@@ -10,6 +10,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    """用户登录"""
     if current_user.is_authenticated:
         return redirect(url_for('blog.index'))
 
@@ -22,17 +23,18 @@ def login():
         if admin:
             if username == admin.username and admin.validate_password(password):
                 login_user(admin, remember)
-                flash('Welcome back.', 'info')
+                flash('Welcome back.欢迎回来。', 'info')
                 return redirect_back()
-            flash('Invalid username or password.', 'warning')
+            flash('Invalid username or password.无效的用户名或密码', 'warning')
         else:
-            flash('No account.', 'warning')
+            flash('No account.没有这个用户。', 'warning')
     return render_template('auth/login.html', form=form)
 
 
 @auth_bp.route('/logout')
 @login_required
 def logout():
+    """退出登录"""
     logout_user()
-    flash('Logout success.', 'info')
+    flash('Logout success.退出。', 'info')
     return redirect_back()

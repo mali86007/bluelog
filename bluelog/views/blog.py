@@ -12,6 +12,7 @@ blog_bp = Blueprint('blog', __name__)
 
 @blog_bp.route('/')
 def index():
+    """博文初始页面"""
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_POST_PER_PAGE']
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page, per_page=per_page)
@@ -21,11 +22,13 @@ def index():
 
 @blog_bp.route('/about')
 def about():
+    """关于"""
     return render_template('blog/about.html')
 
 
 @blog_bp.route('/category/<int:category_id>')
 def show_category(category_id):
+    """显示博文分类"""
     category = Category.query.get_or_404(category_id)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_POST_PER_PAGE']
@@ -36,6 +39,7 @@ def show_category(category_id):
 
 @blog_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
+    """显示博文"""
     post = Post.query.get_or_404(post_id)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
@@ -71,9 +75,9 @@ def show_post(post_id):
         db.session.add(comment)
         db.session.commit()
         if current_user.is_authenticated:  # send message based on authentication status
-            flash('Comment published.', 'success')
+            flash('Comment published.发布评论。', 'success')
         else:
-            flash('Thanks, your comment will be published after reviewed.', 'info')
+            flash('Thanks, your comment will be published after reviewed.你的评论将在审核后发布。', 'info')
             send_new_comment_email(post)  # send notification email to admin
         return redirect(url_for('.show_post', post_id=post_id))
     return render_template('blog/post.html', post=post, pagination=pagination, form=form, comments=comments)
@@ -81,9 +85,10 @@ def show_post(post_id):
 
 @blog_bp.route('/reply/comment/<int:comment_id>')
 def reply_comment(comment_id):
+    """回复评论"""
     comment = Comment.query.get_or_404(comment_id)
     if not comment.post.can_comment:
-        flash('Comment is disabled.', 'warning')
+        flash('Comment is disabled.评论不可用。', 'warning')
         return redirect(url_for('.show_post', post_id=comment.post.id))
     return redirect(
         url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#comment-form')
@@ -91,6 +96,7 @@ def reply_comment(comment_id):
 
 @blog_bp.route('/change-theme/<theme_name>')
 def change_theme(theme_name):
+    """改变主题"""
     if theme_name not in current_app.config['BLUELOG_THEMES'].keys():
         abort(404)
 
