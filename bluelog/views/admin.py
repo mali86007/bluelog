@@ -6,7 +6,7 @@ from bluelog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from bluelog.models import Post, Category, Comment, Link
 from bluelog.utils import redirect_back
 
-admin_bp = Blueprint('admin', __name__)
+admin_bp = Blueprint('admin', __name__) # 蓝图对象admin_bp，'admin'蓝图名称，'__name__'蓝图所在模块名
 
 
 @admin_bp.route('/settings', methods=['GET', 'POST'])
@@ -163,7 +163,7 @@ def new_category():
         category = Category(name=name)
         db.session.add(category)
         db.session.commit()
-        flash('Category created.创建了新分类', 'success')
+        flash('Category created.创建了新标签', 'success')
         return redirect(url_for('.manage_category'))
     return render_template('admin/new_category.html', form=form)
 
@@ -171,16 +171,16 @@ def new_category():
 @admin_bp.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_category(category_id):
-    """编辑博文分类"""
+    """编辑博文标签"""
     form = CategoryForm()
     category = Category.query.get_or_404(category_id)
     if category.id == 1:
-        flash('You can not edit the default category.不能编辑默认的博文分类', 'warning')
+        flash('You can not edit the default category.不能编辑默认的博文标签', 'warning')
         return redirect(url_for('blog.index'))
     if form.validate_on_submit():
         category.name = form.name.data
         db.session.commit()
-        flash('Category updated.更新博文分类', 'success')
+        flash('Category updated.更新博文标签', 'success')
         return redirect(url_for('.manage_category'))
 
     form.name.data = category.name
@@ -190,13 +190,13 @@ def edit_category(category_id):
 @admin_bp.route('/category/<int:category_id>/delete', methods=['POST'])
 @login_required
 def delete_category(category_id):
-    """删除博文分类"""
+    """删除博文标签"""
     category = Category.query.get_or_404(category_id)
     if category.id == 1:
-        flash('You can not delete the default category.不能删除默认博文分类', 'warning')
+        flash('You can not delete the default category.不能删除默认标签', 'warning')
         return redirect(url_for('blog.index'))
     category.delete()
-    flash('Category deleted.删除博文分类', 'success')
+    flash('Category deleted.删除博文标签', 'success')
     return redirect(url_for('.manage_category'))
 
 
@@ -234,7 +234,7 @@ def edit_link(link_id):
         link.url = form.url.data
         db.session.commit()
         flash('Link updated.更新外部链接', 'success')
-        return redirect(url_for('.manage_link'))
+        return redirect(url_for('manage_link'))
     form.name.data = link.name
     form.url.data = link.url
     return render_template('admin/edit_link.html', form=form)
@@ -248,4 +248,4 @@ def delete_link(link_id):
     db.session.delete(link)
     db.session.commit()
     flash('Link deleted.删除外部链接', 'success')
-    return redirect(url_for('.manage_link'))
+    return redirect(url_for('admin_bp.manage_link'))

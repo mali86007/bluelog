@@ -17,17 +17,18 @@
 {% macro _hz_form_wrap(horizontal_columns, form_type, add_group=False, required=False) %}
     {% if form_type == "horizontal" %}
         {% if add_group %}
-            <div class="form-group row{% if required %} required{% endif %}">{% endif %}
-        <div class="offset-{{ horizontal_columns[0] }}-{{ horizontal_columns[1] }}
-              col-{{ horizontal_columns[0] }}-{{ horizontal_columns[2] }}
-             ">
+            <div class="form-group row{% if required %} required{% endif %}">
+		{% endif %}
+			<div class="offset-{{ horizontal_columns[0] }}-{{ horizontal_columns[1] }}
+              col-{{ horizontal_columns[0] }}-{{ horizontal_columns[2] }}">
     {% endif %}
-{{ caller() }}
-
-{% if form_type == "horizontal" %}
-    {% if add_group %}</div>{% endif %}
-    </div>
-{% endif %}
+	{{ caller() }}
+	{% if form_type == "horizontal" %}
+		{% if add_group %}
+			</div>
+		{% endif %}		
+			</div>
+	{% endif %}
 {% endmacro %}
 
 {% macro render_field(field,
@@ -43,7 +44,7 @@ the necessary fix for required=False attributes, but will also not set the requi
 
     {% if field.widget.input_type == 'checkbox' %}
         {% call _hz_form_wrap(horizontal_columns, form_type, True, required=required) %}
-            <div class="form-group form-check{% if form_type == "inline" %} form-check-inline{% endif %}">
+            <div class="form-group form-check{% if form_type == 'inline' %} form-check-inline{% endif %}">
                 <label class="form-check-label">
                     {{ field(class_="form-check-input")|safe }} {{ field.label.text|safe }}
                 </label>
@@ -66,7 +67,7 @@ the necessary fix for required=False attributes, but will also not set the requi
               {% endif %}
             {#% call _hz_form_wrap(horizontal_columns, form_type, True, required=required) %#}
             {% for item in field -%}
-                <div class="form-check{% if form_type == "inline" %} form-check-inline{% endif %}">
+                <div class="form-check{% if form_type == 'inline' %} form-check-inline{% endif %}">
                     <label class="form-check-label">
                         {{ item(class_="form-check-input")|safe }} {{ item.label.text|safe }}
                     </label>
@@ -103,7 +104,7 @@ the necessary fix for required=False attributes, but will also not set the requi
             {%- endfor %}
         </fieldset>
     {% else -%}
-        <div class="form-group {%- if form_type == "horizontal" %} row{% endif -%}
+        <div class="form-group {%- if form_type == 'horizontal' %} row{% endif -%}
                          {%- if field.flags.required %} required{% endif -%}">
             {%- if form_type == "inline" %}
                 {{ field.label(class="sr-only")|safe }}

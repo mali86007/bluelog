@@ -89,6 +89,7 @@ def register_blueprints(app):
     """注册蓝本"""
     app.register_blueprint(blog_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    # app.register_blueprint(admin_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
 
@@ -106,7 +107,7 @@ def register_template_context(app):
     def make_template_context():
         """制造模板上下文，返回词典"""
         admin = Admin.query.first()                                 # 当前管理员
-        categories = Category.query.order_by(Category.name).all()   # 博文分类集
+        categories = Category.query.order_by(Category.name).all()   # 博文标签集
         links = Link.query.order_by(Link.name).all()                # 外部链接集
         if current_user.is_authenticated:
             unread_comments = Comment.query.filter_by(reviewed=False).count()       # 未审核评论数
@@ -182,7 +183,7 @@ def register_commands(app):
 
         category = Category.query.first()
         if category is None:
-            click.echo('Creating the default category...创建默认分类')
+            click.echo('Creating the default category...创建默认标签')
             category = Category(name='Default')
             db.session.add(category)
 
@@ -190,7 +191,7 @@ def register_commands(app):
         click.echo('Done.')
 
     @app.cli.command()
-    @click.option('--category', default=10, help='Quantity of categories, default is 10.分类数量，默认10个')
+    @click.option('--category', default=10, help='Quantity of categories, default is 10.标签数量，默认10个')
     @click.option('--post', default=50, help='Quantity of posts, default is 50.博文数量，默认50篇')
     @click.option('--comment', default=500, help='Quantity of comments, default is 500.评论数量，莫问500篇')
     def forge(category, post, comment):
@@ -203,7 +204,7 @@ def register_commands(app):
         click.echo('Generating the administrator...（生成系统管理员）')
         fake_admin()
 
-        click.echo('Generating %d categories...（生成博文分类）' % category)
+        click.echo('Generating %d categories...（生成博文标签）' % category)
         fake_categories(category)
 
         click.echo('Generating %d posts...（生成博文）' % post)

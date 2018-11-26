@@ -22,10 +22,10 @@ class Admin(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
 class Category(db.Model):
-    """博文分类数据模型"""
+    """博文标签数据模型"""
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True)                # 博文分类名称，不得重复
-    posts = db.relationship('Post', back_populates='category')  # 分类博文集，反向引用category建立双向关系
+    name = db.Column(db.String(30), unique=True)                # 博文标签名称，不得重复
+    posts = db.relationship('Post', back_populates='category')  # 按标签分类博文集，反向引用category建立双向关系
 
     def delete(self):
         """删除分类"""
@@ -43,8 +43,8 @@ class Post(db.Model):
     body = db.Column(db.Text)                       # 博文正文
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)     # 博文时间戳
     can_comment = db.Column(db.Boolean, default=True)                           # 可否评论，默认可
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))           # 分类id
-    category = db.relationship('Category', back_populates='posts')              # 对博文分类的反向引用关系
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))           # 标签id
+    category = db.relationship('Category', back_populates='posts')              # 对博文标签的反向引用关系
     comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')      # 对评论的反向引用关系
 
 class Comment(db.Model):

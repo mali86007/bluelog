@@ -18,24 +18,24 @@ class SettingForm(FlaskForm):
     blog_title = StringField('标题', validators=[DataRequired(), Length(1, 60)])
     blog_sub_title = StringField('子标题', validators=[DataRequired(), Length(1, 100)])
     about = CKEditorField('关于', validators=[DataRequired()])
-    submit = StringField('提交')
+    submit = SubmitField('提交')
 
 class PostForm(FlaskForm):
     """博文表单"""
     title = StringField('标题', validators=[DataRequired(), Length(1, 60)])
-    category = SelectField('类别', coerce=int, default=1)
+    category = SelectField('标签', coerce=int, default=1)
     body = CKEditorField('博文', validators=[DataRequired()])
     submit = SubmitField('提交')
 
 class CategoryForm(FlaskForm):
-    """博文分类表单"""
-    name = StringField('类别', validators=[DataRequired(), Length(1, 30)])
+    """博文标签表单"""
+    name = StringField('标签', validators=[DataRequired(), Length(1, 30)])
     submit = SubmitField('提交')
 
     def validate_name(self, field):
-        """分类名验证"""
+        """标签名验证"""
         if Category.query.filter_by(name=field.data).first():
-            raise ValidationError('用户已存在')
+            raise ValidationError('该标签已存在')
 
 class CommentForm(FlaskForm):
     """评论表单"""
@@ -54,5 +54,5 @@ class AdminCommentForm(FlaskForm):
 class LinkForm(FlaskForm):
     """外部链接表单"""
     name = StringField('名称', validators=[DataRequired(), Length(1, 30)])
-    url = StringField('URL', validators=[DataRequired(), URL(), Length(1, 255)])
+    url = StringField('网址', validators=[DataRequired(), URL(), Length(1, 255)])
     submit = SubmitField('提交')

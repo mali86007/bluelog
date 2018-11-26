@@ -28,7 +28,7 @@ def about():
 
 @blog_bp.route('/category/<int:category_id>')
 def show_category(category_id):
-    """显示博文分类"""
+    """显示博文标签"""
     category = Category.query.get_or_404(category_id)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_POST_PER_PAGE']
