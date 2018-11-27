@@ -25,11 +25,11 @@ class Category(db.Model):
     """博文标签数据模型"""
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True)                # 博文标签名称，不得重复
-    posts = db.relationship('Post', back_populates='category')  # 按标签分类博文集，反向引用category建立双向关系
+    posts = db.relationship('Post', back_populates='category')  # 按标签标签博文集，反向引用category建立双向关系
 
     def delete(self):
-        """删除分类"""
-        default_category = Category.query.get(1)    # 返回id=1的记录 ？万一没有id=1的分类值哪？
+        """删除标签"""
+        default_category = Category.query.get(1)    # 返回id=1的记录 ？万一没有id=1的标签值哪？
         posts = self.posts[:]                       # 返回当前博文集
         for post in posts:
             post.category = default_category

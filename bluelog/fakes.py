@@ -24,14 +24,14 @@ def fake_admin():
 
 
 def fake_categories(count=10):
-    """生成虚拟博文分类10项"""
-    category = Category(name='默认分类')     # 创建默认分类
+    """生成虚拟博文标签10项"""
+    category = Category(name='默认标签')     # 创建默认标签
     db.session.add(category)
 
     for i in range(count):
-        category = Category(name=fake.word())   # 创建虚拟分类
+        category = Category(name=fake.word())   # 创建虚拟标签
         db.session.add(category)
-        try:                                    # 防止出现重复分类名称
+        try:                                    # 防止出现重复标签名称
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
@@ -43,7 +43,7 @@ def fake_posts(count=50):
         post = Post(
             title=fake.sentence(),
             body=fake.text(2000),
-            category=Category.query.get(random.randint(1, Category.query.count())),     # 随机分类
+            category=Category.query.get(random.randint(1, Category.query.count())),     # 随机标签
             timestamp=fake.date_time_this_year()
         )
 

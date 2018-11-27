@@ -20,7 +20,7 @@ def settings():
         current_user.blog_sub_title = form.blog_sub_title.data
         current_user.about = form.about.data
         db.session.commit()
-        flash('Setting updated.更新了设置', 'success')
+        flash('更新了设置', 'success')
         return redirect(url_for('blog.index'))
     form.name.data = current_user.name
     form.blog_title.data = current_user.blog_title
@@ -55,7 +55,7 @@ def new_post():
         # post = Post(title=title, body=body, category_id=category_id)
         db.session.add(post)
         db.session.commit()
-        flash('Post created.创建了博文', 'success')
+        flash('创建了一篇博文。', 'success')
         return redirect(url_for('blog.show_post', post_id=post.id))
     return render_template('admin/new_post.html', form=form)
 
@@ -71,7 +71,7 @@ def edit_post(post_id):
         post.body = form.body.data
         post.category = Category.query.get(form.category.data)
         db.session.commit()
-        flash('Post updated.更新了博文', 'success')
+        flash('更新了一篇博文。', 'success')
         return redirect(url_for('blog.show_post', post_id=post.id))
     form.title.data = post.title
     form.body.data = post.body
@@ -86,7 +86,7 @@ def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
     db.session.commit()
-    flash('Post deleted.删除了博文', 'success')
+    flash('删除了一篇博文。', 'success')
     return redirect_back()
 
 
@@ -97,10 +97,10 @@ def set_comment(post_id):
     post = Post.query.get_or_404(post_id)
     if post.can_comment:
         post.can_comment = False
-        flash('Comment disabled.评论不可用', 'success')
+        flash('这条评论不可用。', 'success')
     else:
         post.can_comment = True
-        flash('Comment enabled.评论可用', 'success')
+        flash('这条评论可用。', 'success')
     db.session.commit()
     return redirect_back()
 
@@ -131,7 +131,7 @@ def approve_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     comment.reviewed = True
     db.session.commit()
-    flash('Comment published.发布评论', 'success')
+    flash('发布了一条评论。', 'success')
     return redirect_back()
 
 
@@ -142,28 +142,28 @@ def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     db.session.delete(comment)
     db.session.commit()
-    flash('Comment deleted.删除评论', 'success')
+    flash('删除了一条评论。', 'success')
     return redirect_back()
 
 
 @admin_bp.route('/category/manage')
 @login_required
 def manage_category():
-    """管理博文分类"""
+    """管理博文标签"""
     return render_template('admin/manage_category.html')
 
 
 @admin_bp.route('/category/new', methods=['GET', 'POST'])
 @login_required
 def new_category():
-    """添加博文分类"""
+    """添加博文标签"""
     form = CategoryForm()
     if form.validate_on_submit():
         name = form.name.data
         category = Category(name=name)
         db.session.add(category)
         db.session.commit()
-        flash('Category created.创建了新标签', 'success')
+        flash('创建了一个新标签。', 'success')
         return redirect(url_for('.manage_category'))
     return render_template('admin/new_category.html', form=form)
 
@@ -175,12 +175,12 @@ def edit_category(category_id):
     form = CategoryForm()
     category = Category.query.get_or_404(category_id)
     if category.id == 1:
-        flash('You can not edit the default category.不能编辑默认的博文标签', 'warning')
+        flash('不能修改默认的博文标签！', 'warning')
         return redirect(url_for('blog.index'))
     if form.validate_on_submit():
         category.name = form.name.data
         db.session.commit()
-        flash('Category updated.更新博文标签', 'success')
+        flash('更新了一个博文标签。', 'success')
         return redirect(url_for('.manage_category'))
 
     form.name.data = category.name
@@ -193,10 +193,10 @@ def delete_category(category_id):
     """删除博文标签"""
     category = Category.query.get_or_404(category_id)
     if category.id == 1:
-        flash('You can not delete the default category.不能删除默认标签', 'warning')
+        flash('不能删除默认标签！', 'warning')
         return redirect(url_for('blog.index'))
     category.delete()
-    flash('Category deleted.删除博文标签', 'success')
+    flash('删除了一个博文标签。', 'success')
     return redirect(url_for('.manage_category'))
 
 
@@ -218,7 +218,7 @@ def new_link():
         link = Link(name=name, url=url)
         db.session.add(link)
         db.session.commit()
-        flash('Link created.创建外部链接', 'success')
+        flash('创建了一条外部链接', 'success')
         return redirect(url_for('.manage_link'))
     return render_template('admin/new_link.html', form=form)
 
@@ -233,8 +233,8 @@ def edit_link(link_id):
         link.name = form.name.data
         link.url = form.url.data
         db.session.commit()
-        flash('Link updated.更新外部链接', 'success')
-        return redirect(url_for('manage_link'))
+        flash('更新了一条外部链接。', 'success')
+        return redirect(url_for('.manage_link'))
     form.name.data = link.name
     form.url.data = link.url
     return render_template('admin/edit_link.html', form=form)
@@ -247,5 +247,5 @@ def delete_link(link_id):
     link = Link.query.get_or_404(link_id)
     db.session.delete(link)
     db.session.commit()
-    flash('Link deleted.删除外部链接', 'success')
-    return redirect(url_for('admin_bp.manage_link'))
+    flash('删除了一条外部链接。', 'success')
+    return redirect(url_for('.manage_link'))

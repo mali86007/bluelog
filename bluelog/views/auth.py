@@ -23,11 +23,11 @@ def login():
         if admin:
             if username == admin.username and admin.validate_password(password):
                 login_user(admin, remember)
-                flash('Welcome back.欢迎回来。', 'info')
+                flash('欢迎回来。', 'info')
                 return redirect_back()
-            flash('Invalid username or password.无效的用户名或密码', 'warning')
+            flash('无效的用户名或密码。', 'warning')
         else:
-            flash('No account.没有这个用户。', 'warning')
+            flash('没有这个用户。', 'warning')
     return render_template('auth/login.html', form=form)
 
 
@@ -36,5 +36,5 @@ def login():
 def logout():
     """退出登录"""
     logout_user()
-    flash('Logout success.退出。', 'info')
+    flash('安全退出。', 'info')
     return redirect_back()
