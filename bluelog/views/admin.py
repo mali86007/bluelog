@@ -50,9 +50,6 @@ def new_post():
         body = form.body.data
         category = Category.query.get(form.category.data)
         post = Post(title=title, body=body, category=category)
-        # same with:
-        # category_id = form.category.data
-        # post = Post(title=title, body=body, category_id=category_id)
         db.session.add(post)
         db.session.commit()
         flash('创建了一篇博文。', 'success')

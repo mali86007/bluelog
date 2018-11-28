@@ -27,6 +27,12 @@ class PostForm(FlaskForm):
     body = CKEditorField('博文', validators=[DataRequired()])
     submit = SubmitField('提交')
 
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.category.choices = [(category.id, category.name)
+                                 for category in Category.query.order_by(Category.name).all()]
+
+
 class CategoryForm(FlaskForm):
     """博文标签表单"""
     name = StringField('标签', validators=[DataRequired(), Length(1, 30)])
